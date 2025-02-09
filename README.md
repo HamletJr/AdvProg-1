@@ -3,13 +3,9 @@
 **NPM:**    2306275746<br>
 **Kelas:**  Pengjut A<br>
 
----
-
 ### Riwayat modul-modul
 | [Modul 1](#modul-1) |
 |---------------|
-
----
 
 ## Modul 1
 ### Reflection 1
