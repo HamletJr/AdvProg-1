@@ -11,17 +11,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(MainController.class)
-public class MainControllerTest {
+class MainControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
-    void setUp() {
-    }
-
     @Test
-    public void canGetWelcomePage() throws Exception {
+    void canGetWelcomePage() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(
                         get("/"))
                 .andReturn().getResponse();
