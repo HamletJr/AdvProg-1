@@ -4,8 +4,8 @@
 **Kelas:**  Pengjut A<br>
 
 ### Riwayat modul-modul
-| [Modul 1](#modul-1) |
-|---------------|
+| [Modul 1](#modul-1) | [Modul 2](#modul-2) |
+|---------------------|---------------------|
 
 ## Modul 1
 ### Reflection 1
@@ -40,3 +40,70 @@ Untuk prinsip-prinsip _secure coding_, masih ada banyak prinsip yang belum terim
    - Selain itu, kita juga akan lebih sulit untuk _maintain_ unit test kita ke depannya dengan adanya ada 2 file yang berbeda untuk satu _test suite_ yang sebenarnya menguji modul/fitur yang sama.
 
    - Jika kita ingin menguji jumlah produk dalam Product List, sebaiknya _test_ tersebut dimasukkan ke dalam file `CreateProductFunctionalTest.java` untuk mengurangi _duplication_ dan menjaga prinsip _clean coding_.
+
+
+## Modul 2
+1. Untuk _exercise_ minggu ini, saya memperbaiki beberapa code quality issues yang ditemukan oleh SonarCloud, yaitu:
+
+   - **Penghapusan _exception handling_ yang tidak diperlukan**
+   ```java
+   // Contoh potongan kode dari salah satu fungsi yang bermasalah dalam HomePageFunctionalTest.java
+   @Test
+   void pageTitle_isCorrect(ChromeDriver driver) throws Exception {
+     // Exercise
+     driver.get(baseUrl);
+     String pageTitle = driver.getTitle();
+
+     // Verify
+     assertEquals("ADV Shop", pageTitle);
+   }
+   ```
+   Karena isi dari _method_ tersebut tidak dapat _throw exception_, maka deklarasi `throws Exception` di method header tidak berguna dan dapat membingungkan pembaca. Solusinya adalah menghapus bagian tersebut untuk menghasilkan method berikut:
+   ```java
+   // Solusi
+   @Test
+   void pageTitle_isCorrect(ChromeDriver driver) {
+     // Exercise
+     driver.get(baseUrl);
+     String pageTitle = driver.getTitle();
+
+     // Verify
+     assertEquals("ADV Shop", pageTitle);
+   }
+   ```
+   
+   - **Menghapus beberapa _method_ kosong yang tidak diperlukan**
+   ```java
+   // Contoh potongan kode yang bermasalah dalam MainControllerTest.java
+   ...
+   @BeforeEach
+   void setUp() {
+   }
+   ...
+   ```
+   Pada beberapa file _unit test_ yang saya buat, terdapat method `setUp()` yang dijalankan sebelum setiap _unit test_ untuk membantu menyiapkan apa yang diperlukan untuk setiap _unit test_. Namun, pada beberapa kasus proses `setUp()` ini tidak diperlukan sehingga terdapat method yang kosong seperti potongan kode di atas. Ini tidak baik karena ini membuat kode kita berantakan dan tidak rapi. Solusi yang saya terapkan adalah penghapusan _method_ `setUp()` pada beberapa file di mana itu tidak diperlukan.
+
+
+   - **Menghapus _modifier_ `public` pada beberapa class yang tidak membutuhkannya**
+   ```java
+   // Contoh potongan kode dari definisi class yang bermasalah dalam MainControllerTest.java
+   @WebMvcTest(MainController.class)
+   public class MainControllerTest {
+      ...
+   }
+   ```
+   Menurut dokumentasi JUnit, sebaiknya elemen-elemen dalam _test suite_ memiliki `default` _visibility_ kecuali memang harus `public`, seperti jika kita ingin extend _test suite_ tersebut dalam class lain. Maka, saya menghapus _modifier_ `public`, seperti berikut:
+   ```java
+   // Potongan kode dari definisi class yang bermasalah dalam MainControllerTest.java
+   @WebMvcTest(MainController.class)
+   class MainControllerTest {
+      ...
+   }
+   ```
+
+2. Menurut saya, _workflow_ CI/CD yang sudah saya tambahkan ke repositori GitHub memenuhi definisi _Continuous Integration_ dan _Continuous Deployment_. 
+
+   - Sesuai dengan definisi yang diberikan oleh Swaraj, _Continuous Integration_ adalah pengintegrasian dan verifikasi perubahan dan _update_ kode secara **terus-menerus dan otomatis** yang dibantu oleh _build script_ dan _tools_. Dalam kasus ini, file `ci.yml`, `sonarcloud.yml`, dan `scorecard.yml` (_build script_) menggunakan Gradle, SonarCloud, dan Scorecard (_tools_) untuk memastikan bahwa kode yang saya rancang tidak bermasalah.
+   
+   - Selain itu, saya juga sudah mengimplementasikan _Continuous Deployment_ dengan menggunakan PaaS Koyeb yang bersifat _pull-based_. Koyeb akan otomatis melakukan _pull_ dari repositori saya ketika ada perubahan baru dan melakukan _deploy_ ulang sehingga aplikasi web akan ter-_update_ sendiri tanpa perlu intervensi dari _developer_.
+   
