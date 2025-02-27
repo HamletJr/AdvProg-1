@@ -108,16 +108,16 @@ Untuk prinsip-prinsip _secure coding_, masih ada banyak prinsip yang belum terim
    - Selain itu, saya juga sudah mengimplementasikan _Continuous Deployment_ dengan menggunakan PaaS Koyeb yang bersifat _pull-based_. Koyeb akan otomatis melakukan _pull_ dari repositori saya ketika ada perubahan baru dan melakukan _deploy_ ulang sehingga aplikasi web akan ter-_update_ sendiri tanpa perlu intervensi dari _developer_.
 
 ## Modul 3
-1. Setelah mengerjakan modul dan exercise, saya merasa kode saya sudah memenuhi semua prinsip **SOLID**, yaitu:
+1. Setelah mengerjakan modul dan exercise, saya merasa kode saya sudah memenuhi prinsip-prinsip **SOLID** berikut, yaitu:
    
    - **Single Responsibility Principle**<br>
    Dengan memisahkan logika `CarController` dan `ProductController`, setiap _class_ dan _file_ sekarang memiliki tanggung jawab masing-masing sehingga memudahkan proses _maintenance_ ke depannya.
 
    - **Open-Closed Principle**<br>
-   Saya melakukan _extract interface_ dan membuat _interface_ baru, `GenericService`, sehingga _interface_ tersebut tertutup untuk modifikasi tapi terbuka untuk ekstensi. Jika ada Service baru yang ingin di-implementasikan atau ada fungsi baru yang ingin ditambahkan ke salah satu subclass Service, misalnya `ProductService` atau `CarService`, itu bisa dilakukan tanpa perlu mengubah `GenericService`.   
+   Saya melakukan _extract interface_ dan membuat _interface_ baru, `GenericService`, yang tertutup untuk modifikasi tapi terbuka untuk ekstensi. Jika ada Service baru yang ingin di-implementasikan atau ada fungsi baru yang ingin ditambahkan ke salah satu subclass Service, misalnya `ProductService` atau `CarService`, itu bisa dilakukan tanpa perlu mengubah `GenericService`.
    
    - **Liskov Substitution Principle**<br>
-   Pada awalnya, `CarController` merupakan subclass dari `ProductController`. Ini melanggar prinsip LSP karena `CarController` tidak dapat digunakan untuk mensubstitusikan `ProductController` dan sebaliknya. Oleh karena itu, saya menghapus hubungan inheritance antara `ProductController` dan `CarController` sehingga masing-masing _class_ sekarang berdiri sendiri.   
+   Pada awalnya, `CarController` merupakan subclass dari `ProductController`. Ini melanggar prinsip LSP karena `CarController` tidak dapat digunakan untuk mensubstitusikan `ProductController` dan sebaliknya. Oleh karena itu, saya menghapus hubungan inheritance antara `ProductController` dan `CarController` sehingga masing-masing _class_ sekarang berdiri sendiri.
 
    - **Dependency Inversion Principle**<br>
    Pada awalnya, modul `CarController` (modul _high-level_) bergantung pada `CarServiceImpl`, yaitu implementasi dari `CarService`. Ini melanggar konsep DIP karena seharusnya modul _high-level_ bergantung pada abstraksi, bukan implementasi. Oleh karena itu, saya mengubah _dependency_ dalam modul `CarController` untuk bergantung kepada `CarService` sehingga ke depannya akan lebih mudah untuk mengubah detil implementasi `CarService`.
@@ -132,8 +132,8 @@ Untuk prinsip-prinsip _secure coding_, masih ada banyak prinsip yang belum terim
 
 3. Kekurangan dari tidak menggunakan **SOLID** dalam kode saya adalah:
 
-   - Kode akan lebih sulit di-_maintain_. 
+   - Kode akan lebih sulit di-_maintain_. Jika kita tidak menggunakan prinsip SOLID dalam kode kita, kode kita akan lebih sulit untuk di-update sesuai kebutuhan atau sulit diperbaiki jika ada bug yang muncul di kemudian hari. Contohnya adalah pelanggaran prinsip DIP sehingga kita sulit untuk mengubah detil-detil implementasi fungsi karena terdapat ketergantungan dari modul _high-level_ yang seharusnya tidak ada.
 
-   - Kode akan lebih sulit dibaca oleh orang lain. Jika kita bekerja dalam tim suatu hari, kode kita pasti akan dibaca oleh orang lain. Jika kita tidak berusaha untuk menerapkan prinsip SOLID, kita akan menyulitkan _developer_ lain untuk membaca alur jalannya kode yang kita tulis. Contohnya adalah prinsip SRP yang jika dilanggar dapat membuat fungsi kita sangat panjang dan sulit untuk dibaca.
+   - Kode akan lebih sulit dibaca oleh orang lain. Jika kita bekerja dalam tim suatu hari, kode kita pasti akan dibaca oleh orang lain. Jika kita tidak berusaha untuk menerapkan prinsip SOLID, kita akan menyulitkan _developer_ lain untuk membaca alur jalannya kode yang kita tulis. Contohnya adalah pelanggaran prinsip SRP yang dapat membuat fungsi kita sangat panjang dan sulit untuk dibaca.
 
    - Kode akan lebih sulit ditambah fitur di masa depan. Prinsip-prinsip SOLID dirancang untuk mempermudah proses modifikasi, sehingga jika prinsip-prinsip SOLID tidak diterapkan, kode kita lebih berkemungkinan untuk mengalami kerusakan atau bug saat _development_. Contohnya adalah jika class yang kita rancang tidak menerapkan OCP, kita terpaksa untuk mengubah _class_ tersebut jika ingin menambah fungsionalitas, yang dapat melanggar SRP dan juga menambah _bug_ atau _behavior_ yang tidak diinginkan.
