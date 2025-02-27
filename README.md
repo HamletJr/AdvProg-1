@@ -4,8 +4,8 @@
 **Kelas:**  Pengjut A<br>
 
 ### Riwayat modul-modul
-| [Modul 1](#modul-1) | [Modul 2](#modul-2) |
-|---------------------|---------------------|
+| [Modul 1](#modul-1) | [Modul 2](#modul-2) | [Modul 3](#modul-3) |
+|---------------------|---------------------| --------------------|
 
 ## Modul 1
 ### Reflection 1
@@ -106,4 +106,34 @@ Untuk prinsip-prinsip _secure coding_, masih ada banyak prinsip yang belum terim
    - Sesuai dengan definisi yang diberikan oleh Swaraj, _Continuous Integration_ adalah pengintegrasian dan verifikasi perubahan dan _update_ kode secara **terus-menerus dan otomatis** yang dibantu oleh _build script_ dan _tools_. Dalam kasus ini, file `ci.yml`, `sonarcloud.yml`, dan `scorecard.yml` (_build script_) menggunakan Gradle, SonarCloud, dan Scorecard (_tools_) untuk memastikan bahwa kode yang saya rancang tidak bermasalah.
    
    - Selain itu, saya juga sudah mengimplementasikan _Continuous Deployment_ dengan menggunakan PaaS Koyeb yang bersifat _pull-based_. Koyeb akan otomatis melakukan _pull_ dari repositori saya ketika ada perubahan baru dan melakukan _deploy_ ulang sehingga aplikasi web akan ter-_update_ sendiri tanpa perlu intervensi dari _developer_.
+
+## Modul 3
+1. Setelah mengerjakan modul dan exercise, saya merasa kode saya sudah memenuhi semua prinsip **SOLID**, yaitu:
    
+   - **Single Responsibility Principle**<br>
+   Dengan memisahkan logika `CarController` dan `ProductController`, setiap _class_ dan _file_ sekarang memiliki tanggung jawab masing-masing sehingga memudahkan proses _maintenance_ ke depannya.
+
+   - **Open-Closed Principle**<br>
+   Saya melakukan _extract interface_ dan membuat _interface_ baru, `GenericService`, sehingga _interface_ tersebut tertutup untuk modifikasi tapi terbuka untuk ekstensi. Jika ada Service baru yang ingin di-implementasikan atau ada fungsi baru yang ingin ditambahkan ke salah satu subclass Service, misalnya `ProductService` atau `CarService`, itu bisa dilakukan tanpa perlu mengubah `GenericService`.   
+   
+   - **Liskov Substitution Principle**<br>
+   Pada awalnya, `CarController` merupakan subclass dari `ProductController`. Ini melanggar prinsip LSP karena `CarController` tidak dapat digunakan untuk mensubstitusikan `ProductController` dan sebaliknya. Oleh karena itu, saya menghapus hubungan inheritance antara `ProductController` dan `CarController` sehingga masing-masing _class_ sekarang berdiri sendiri.   
+
+   - **Dependency Inversion Principle**<br>
+   Pada awalnya, modul `CarController` (modul _high-level_) bergantung pada `CarServiceImpl`, yaitu implementasi dari `CarService`. Ini melanggar konsep DIP karena seharusnya modul _high-level_ bergantung pada abstraksi, bukan implementasi. Oleh karena itu, saya mengubah _dependency_ dalam modul `CarController` untuk bergantung kepada `CarService` sehingga ke depannya akan lebih mudah untuk mengubah detil implementasi `CarService`.
+
+2. Keuntungan dari menerapkan prinsip **SOLID** dalam kode saya adalah:
+
+   - Proses _maintenance_ kode lebih mudah dilakukan karena kode yang dihasilkan rapi dan terpisah dalam modul masing-masing sesuai fungsi. Contohnya adalah pemisahan `CarController` dan `ProductController` yang dipisah sehingga lebih mudah untuk menangani masalah dan mengembangkan fitur untuk masing-masing modul secara terpisah.
+   
+   - Proses _testing_ lebih mudah dilakukan karena setiap modul terpisah sehingga _testing_ dapat dipisah juga untuk masing-masing modul. Contohnya adalah `CarController` dan `ProductController` yang awalnya di dalam satu file dan memiliki hubungan _inheritance_, dipisah dan tidak lagi memiliki hubungan _inheritance_ sehingga setiap class dapat diuji sendiri secara independen dan terpisah antara satu sama lain.
+   
+   - Kode kita lebih mudah dibaca dan lebih mudah menemukan bug. Prinsip-prinsip SOLID membuat kode kita lebih modular sehingga tidak ada fungsi yang melakukan terlalu banyak hal. Ini akan menghasilkan kode yang lebih pendek dan mudah dibaca. Contohnya adalah SRP yang membatasi setiap _class_ untuk hanya melakukan satu hal saja sehingga kode yang perlu dibaca untuk memahami suatu _class_ akan lebih sedikit.
+
+3. Kekurangan dari tidak menggunakan **SOLID** dalam kode saya adalah:
+
+   - Kode akan lebih sulit di-_maintain_. 
+
+   - Kode akan lebih sulit dibaca oleh orang lain. Jika kita bekerja dalam tim suatu hari, kode kita pasti akan dibaca oleh orang lain. Jika kita tidak berusaha untuk menerapkan prinsip SOLID, kita akan menyulitkan _developer_ lain untuk membaca alur jalannya kode yang kita tulis. Contohnya adalah prinsip SRP yang jika dilanggar dapat membuat fungsi kita sangat panjang dan sulit untuk dibaca.
+
+   - Kode akan lebih sulit ditambah fitur di masa depan. Prinsip-prinsip SOLID dirancang untuk mempermudah proses modifikasi, sehingga jika prinsip-prinsip SOLID tidak diterapkan, kode kita lebih berkemungkinan untuk mengalami kerusakan atau bug saat _development_. Contohnya adalah jika class yang kita rancang tidak menerapkan OCP, kita terpaksa untuk mengubah _class_ tersebut jika ingin menambah fungsionalitas, yang dapat melanggar SRP dan juga menambah _bug_ atau _behavior_ yang tidak diinginkan.
