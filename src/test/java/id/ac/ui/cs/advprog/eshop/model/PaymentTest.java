@@ -1,0 +1,150 @@
+package id.ac.ui.cs.advprog.eshop.model;
+
+import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class PaymentTest {
+    private List<Product> products;
+    private Order order;
+    private Map<String, String> paymentData;
+
+    @BeforeEach
+    void setUp() {
+        this.products = new ArrayList<>();
+
+        Product product1 = new Product();
+        product1.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product1.setProductName("Tribbie");
+        product1.setProductQuantity(7);
+
+        Product product2 = new Product();
+        product2.setProductId("a2c62328-4a37-4664-83c7-f32db8620155");
+        product2.setProductName("Castorice");
+        product2.setProductQuantity(7);
+
+        this.products.add(product1);
+        this.products.add(product2);
+
+        order = new Order("13652556-012a-4c07-b546-54eb1396d79b",
+                this.products, 1708560000L, "Tribios");
+
+        paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "ESHOP1234ABC5678");
+    }
+
+    @Test
+    void testCreateVoucherPaymentNullData() {
+        assertThrows(IllegalArgumentException.class, () -> new Payment(order.getId(),
+                PaymentMethod.VOUCHER.getValue(), null));
+    }
+
+    @Test
+    void testCreateVoucherPaymentValidData() {
+        Payment payment = new Payment(order.getId(), PaymentMethod.VOUCHER.getValue(), paymentData);
+        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testCreateVoucherPaymentSuccessStatus() {
+        Payment payment = new Payment(order.getId(), PaymentMethod.VOUCHER.getValue(),
+                PaymentStatus.SUCCESS.getValue(), paymentData);
+        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testCreatePaymentInvalidStatus() {
+        assertThrows(IllegalArgumentException.class, () -> new Payment(order.getId(),
+                PaymentMethod.VOUCHER.getValue(), "CANCELLED", paymentData));
+    }
+
+    @Test
+    void testUpdatePaymentStatusSuccess() {
+        Payment payment = new Payment(order.getId(), PaymentMethod.VOUCHER.getValue(), paymentData);
+        payment.setStatus(PaymentStatus.SUCCESS.getValue());
+        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testUpdatePaymentStatusInvalid() {
+        Payment payment = new Payment(order.getId(), PaymentMethod.VOUCHER.getValue(), paymentData);
+        assertThrows(IllegalArgumentException.class, () -> payment.setStatus("CANCELLED"));
+    }
+
+    @Test
+    void testCreatePaymentInvalidMethod() {
+        assertThrows(IllegalArgumentException.class, () -> new Payment(order.getId(),
+                "FIREFLY", paymentData));
+    }
+
+    @Test
+    void testCreateVoucherPaymentEmptyData() {
+        paymentData.clear();
+
+        Payment payment = new Payment(order.getId(), PaymentMethod.VOUCHER.getValue(), paymentData);
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testCreateVoucherPaymentNot16Characters() {
+        paymentData.clear();
+        paymentData.put("voucherCode", "ESHOPFIREFLY12345678");
+
+        Payment payment = new Payment(order.getId(), PaymentMethod.VOUCHER.getValue(), paymentData);
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testCreateVoucherPaymentNot8Numbers() {
+        paymentData.clear();
+        paymentData.put("voucherCode", "ESHOP1234ABCDE78");
+
+        Payment payment = new Payment(order.getId(), PaymentMethod.VOUCHER.getValue(), paymentData);
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testCreateVoucherPaymentNotStartWithEshop() {
+        paymentData.clear();
+        paymentData.put("voucherCode", "DSHIP1234ABC5678");
+
+        Payment payment = new Payment(order.getId(), PaymentMethod.VOUCHER.getValue(), paymentData);
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testCreateBankTransferPaymentValid() {
+        paymentData.clear();
+        paymentData.put("bankName", "BRI");
+        paymentData.put("referenceCode", "A12345678XXX");
+
+        Payment payment = new Payment(order.getId(), PaymentMethod.BANKTRANSFER.getValue(), paymentData);
+        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testCreateBankTransferPaymentNoBankName() {
+        paymentData.clear();
+        paymentData.put("referenceCode", "A12345678XXX");
+
+        Payment payment = new Payment(order.getId(), PaymentMethod.BANKTRANSFER.getValue(), paymentData);
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+    }
+
+    @Test
+    void testCreateBankTransferPaymentNoReferenceCode() {
+        paymentData.clear();
+        paymentData.put("bankName", "BRI");
+
+        Payment payment = new Payment(order.getId(), PaymentMethod.BANKTRANSFER.getValue(), paymentData);
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
+    }
+}
