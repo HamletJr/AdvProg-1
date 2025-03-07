@@ -4,8 +4,8 @@
 **Kelas:**  Pengjut A<br>
 
 ### Riwayat modul-modul
-| [Modul 1](#modul-1) | [Modul 2](#modul-2) | [Modul 3](#modul-3) |
-|---------------------|---------------------| --------------------|
+| [Modul 1](#modul-1) | [Modul 2](#modul-2) | [Modul 3](#modul-3) | [Modul 4](#modul-4) |
+|---------------------|---------------------| --------------------| --------------------|
 
 ## Modul 1
 ### Reflection 1
@@ -137,3 +137,33 @@ Untuk prinsip-prinsip _secure coding_, masih ada banyak prinsip yang belum terim
    - Kode akan lebih sulit dibaca oleh orang lain. Jika kita bekerja dalam tim suatu hari, kode kita pasti akan dibaca oleh orang lain. Jika kita tidak berusaha untuk menerapkan prinsip SOLID, kita akan menyulitkan _developer_ lain untuk membaca alur jalannya kode yang kita tulis. Contohnya adalah pelanggaran prinsip SRP yang dapat membuat fungsi kita sangat panjang dan sulit untuk dibaca.
 
    - Kode akan lebih sulit ditambah fitur di masa depan. Prinsip-prinsip SOLID dirancang untuk mempermudah proses modifikasi, sehingga jika prinsip-prinsip SOLID tidak diterapkan, kode kita lebih berkemungkinan untuk mengalami kerusakan atau bug saat _development_. Contohnya adalah jika class yang kita rancang tidak menerapkan OCP, kita terpaksa untuk mengubah _class_ tersebut jika ingin menambah fungsionalitas, yang dapat melanggar SRP dan juga menambah _bug_ atau _behavior_ yang tidak diinginkan.
+
+## Modul 4
+1. 3 objektif dalam membuat test menurut Percival adalah correctness, maintainability, dan productive workflow. Jika dianalisis dari setiap objektif:
+
+   - **Correctness**<br>
+   Dari pengalaman saya menggunakan unit test dan functional test, objektif ini sudah terpenuhi karena saya menemukan bahwa aplikasi web saya berfungsi dengan baik jika test saya berhasil, dan begitu juga sebaliknya: jika test tidak berhasil maka aplikasi web saya tidak akan berfungsi dengan baik.
+   
+   - **Maintainability**<br>
+   Kadang-kadang saya merasa takut dalam melakukan _refactoring_ karena khawatir akan membuat suatu test atau fitur hancur, namun ternyata setelah saya menjalankan TDD minggu ini ternyata tidak ada masalah yang muncul setelah _refactoring_ sehingga saya merasa test saya sudah cukup oke dan membantu saya dalam mengembangkan kode yang _maintainable_.
+
+   - **Productive Workflow**<br>
+   Saya merasa test saya dapat berjalan dengan cepat tanpa tidak menganggu workflow saya. Oleh karena itu, saya sering menjalankan test saya ketika melakukan perubahan kode agar _bug_ dapat terdeteksi dengan cepat. Selain itu, IDE IntelliJ menyediakan fitur untuk menjalankan sebagian test saja sehingga saya bisa memilih test-test mana saja yang ingin saya jalankan untuk menghemat waktu.
+
+
+2. _F.I.R.S.T. principle_ merujuk pada 5 prinsip yang sebaiknya dipenuhi oleh test kita, yaitu Fast, Isolated/Independent, Repeatable, Self-Validating, dan Thorough/Timely. Jika dianalisis dari setiap prinsip:
+
+   - **Fast**<br>
+   Saya merasa nyaman dan tidak terganggu ketika menjalankan semua test saya, karena unit test yang saya rancang hanya perlu <2 detik untuk dijalankan menggunakan teknik _mock_ sehingga saya tidak perlu menunggu lama untuk mengetahui kebenaran dari kode saya.
+   
+   - **Isolated/Independent**<br>
+   Test yang saya buat tidak mempengaruhi atau dipengaruhi oleh test lain, sehingga jika saya menghapus, menambah, atau memodifikasi suatu test, test-test yang lain tetap akan berjalan dengan baik. Ini bisa terjadi karena saya sudah menggunakan `setUp()` sebelum setiap test agar semuanya dijalankan dalam kondisi yang sama.
+   
+   - **Repeatable**<br>
+   Jika test saya dijalankan berulang-ulang dengan kode yang sama, test saya akan selalu memberi hasil yang sama dan konsisten. Ini juga terjadi karena saya sudah menggunakan teknik _mock_ agar hasil dari komponen lain selalu sama.
+   
+   - **Self-Validating**<br>
+   Test yang saya buat sudah cukup terbatas dalam scope dan hanya melakukan assertion, bukan print. Selain itu, saya juga berusaha  untuk membatasi jumlah assertion agar setiap test menguji satu hal saja.
+
+   - **Thorough/Timely**<br>
+   Menurut saya, unit test yang saya buat sudah menangani sebagian besar edge case yang mungkin, tetapi bisa saja ada beberapa edge case yang terlewat. Di sisi lain, _code coverage_ dari kode saya sudah cukup tinggi, sehingga sebagian besar kode saya sudah dijalankan oleh test.
